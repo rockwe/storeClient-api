@@ -1,0 +1,19 @@
+{
+  "name": "storeclient-api",
+  "version": "1.0.0",
+  "description": "API application mobile de prise de commande destinée aux clients",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "store",
+    "mobile",
+    "api"
+  ],
+  "author": "Rock well",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
