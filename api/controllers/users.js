@@ -1,13 +1,13 @@
-const uuidv4 = require('uuid/v4');
+//const uuidv4 = require('uuid/v4');
 const User = require('../models/user');
 const Device = require('../models/device');
-const Conversation = require('../models/conversation');
+//const Conversation = require('../models/conversation');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Pusher = require('../../helpers/pusher');
 
 const manageDevice = async (uid, params) => {
-    const uuid = params.uuid || 'selam-' + params.email /*+ '-' + uuidv4()*/;
+    const uuid = params.uuid || 'store-' + params.email /*+ '-' + uuidv4()*/;
     const pusherChannel = params.pusherChannel || uuid;
     const version = params.version || 'n/a';
     const type = params.uuid ? 'mobile' : 'web';
@@ -84,8 +84,6 @@ exports.signup = async (req, res, next) => {
                     } else {
                         const user = new User({
                             email: req.body.email,
-                            //pusherChannel: req.body.pusherChannel || 'channel-' + (new Date).getTime(),
-                            //deviceUUID: req.body.uuid || 'UUID-'  + (new Date).getTime(),
                             password: hash,
                             name: req.body.name,
                             phoneNumber: req.body.phoneNumber || null,
@@ -188,3 +186,5 @@ exports.upload = async (req, res, next) => {
     let user = await User.findOneAndUpdate({_id: req.params.id}, {picture: process.env.APP_URL + '/' + req.file.path});
     res.status(200).json({message: 'Ok'});
 };
+
+

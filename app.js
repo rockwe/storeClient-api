@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 app.use(morgan('dev'));
-//app.use('/uploads', express.static('uploads'))
+app.use('/uploads', express.static('uploads'))
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb', parameterLimit: 50000 }));
 

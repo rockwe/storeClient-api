@@ -1,8 +1,12 @@
+const userRoutes = require('./user');
+const Device = require('../models/device')
+
 const Pusher = require('../../helpers/pusher')
 
 
 
 module.exports = (app) => {
+    app.use('/api/v1/user', userRoutes);
 
     // PUSHER
     app.post('/api/v1/pusher/auth', (req, res, next) => {
