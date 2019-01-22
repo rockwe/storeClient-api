@@ -154,6 +154,7 @@ exports.update = (req, res, next) => {
     })
 };
 
+// creation du token du device par firebase
 exports.setDevicePushToken = async (req, res, next) => {
     const device = await Device.findOne({uuid: req.body.uuid, user: req.userData.id}).exec();
     if (device && device.pushToken !== req.body.pushToken) {

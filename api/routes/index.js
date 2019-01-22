@@ -1,5 +1,11 @@
 const userRoutes = require('./user');
 const Device = require('../models/device')
+const  subCategoryRoutes = require('./subCategory');
+const  categoryRoutes = require('./category');
+const  countryRoutes = require('./country');
+const  townRoutes = require('./town');
+const  articleRoutes = require('./article');
+
 
 const Pusher = require('../../helpers/pusher')
 
@@ -7,6 +13,13 @@ const Pusher = require('../../helpers/pusher')
 
 module.exports = (app) => {
     app.use('/api/v1/user', userRoutes);
+    app.use('/api/v1/sub-category', subCategoryRoutes);
+    app.use('/api/v1/category', categoryRoutes);
+    app.use('/api/v1/country', countryRoutes);
+    app.use('/api/v1/town', townRoutes);
+    app.use('/api/v1/article', articleRoutes);
+
+
 
     // PUSHER
     app.post('/api/v1/pusher/auth', (req, res, next) => {
