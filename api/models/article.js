@@ -9,7 +9,7 @@ const articleSchema = mongoose.Schema({
         amount: { type: Number, required: true, default: 0 },
         fixed: { type: Boolean, default: false }
     },
-    currency: { type: String, default: 'CFA' },
+    currency: { type: String, default: 'DT' },
     pictures: [{type: String}],
     region: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Town" },
     //displayPhoneNumber: { type: Boolean, default: true },

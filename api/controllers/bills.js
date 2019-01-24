@@ -1,24 +1,14 @@
-const Country = require('../models/country');
+const Bill = require('../models/bill');
 
 
 exports.fetch =(req, res, next) => {
-    Country.find()
-        .exec()
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 3;
+    Bill.paginate({}, { page: page, limit: limit,  sort: {_id: 1}, lean: true})
+    //.exec()
         .then(docs => {
-            res.status(200).json({
-                count: docs.length,
-                country: docs.map(doc => {
-                    return {
-                        name: doc.name,
-                        code: doc.code,
-                        currency: doc.currency,
-                        request: {
-                            type: "GET",
-                            url: "http://localhost:5000/api/v1/country/" + doc._id
-                        }
-                    };
-                })
-            });
+            res.status(200).json( docs
+            );
         })
         .catch(err => {
             res.status(500).json({
@@ -28,15 +18,15 @@ exports.fetch =(req, res, next) => {
 };
 
 exports.find = (req, res, next) => {
-    Country.findById(req.params.id)
+    Bill.findById(req.params.id)
         .exec()
-        .then(country => {
-            if (!country) {
+        .then(bill => {
+            if (!bill) {
                 return res.status(404).json({
-                    message: "Country  not found"
+                    message: "bill  not found"
                 });
             }
-            res.status(200).json({ country });
+            res.status(200).json({ bill });
         })
         .catch(err => {
             res.status(500).json({
@@ -46,21 +36,19 @@ exports.find = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-    const country = new Country({
-        name: req.body.name,
-        code: req.body.code,
-        currency: req.body.currency
+    const bill = new Bill({
+        user: req.body.user
     });
-    country.save()
+    bill.save()
         .then(result => {
             console.log(result);
             res.status(201).json({
                 message: "Success",
                 data: {
                     _id: result._id,
-                    name: result.name,
-                    code: result.code,
-                    currency: result.currency
+                    user: result.user,
+                    created_at: result.created_at,
+                    updated_at: result.updated_at
                 }
             });
         })
@@ -72,7 +60,7 @@ exports.create = (req, res, next) => {
         });
 };
 exports.delete = (req, res, next) => {
-    Country.remove({ _id: req.params.id })
+    Bill.remove({ _id: req.params.id })
         .exec()
         .then(result => {
             res.status(200).json({
@@ -88,13 +76,11 @@ exports.delete = (req, res, next) => {
 
 exports.patch = (req, res, next) => {
 
-    Category.findByIdAndUpdate(req.params.id, {
-        name: req.body.name,
-        code: req.body.code,
-        currency: req.body.currency
+    Bill.findByIdAndUpdate(req.params.id, {
+        updated_at: req.body.updated_at,
     }, {new: true}, function (err) {
         if (err) {
-            res.send({state: "erreur update country"})
+            res.send({state: "erreur update Bill"})
         }
         res.send({state: "Success"})
     })

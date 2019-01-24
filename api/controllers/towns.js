@@ -60,8 +60,8 @@ exports.create = (req, res, next) => {
                 message: "Success",
                 data: {
                     _id: result._id,
-                    name: result.body.name,
-                    code: result.body.code,
+                    name: result.name,
+                    code: result.code,
                     country: result.country
                 }
             });
