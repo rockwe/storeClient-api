@@ -9,7 +9,7 @@ const  lignepanierRoutes = require('./lignePagne');
 const  billRoutes = require('./bill');
 
 
-const Pusher = require('../../helpers/pusher')
+
 
 
 
@@ -22,5 +22,8 @@ module.exports = (app) => {
     app.use('/api/v1/article', articleRoutes);
     app.use('/api/v1/shopeDetail', lignepanierRoutes);
     app.use('/api/v1/bill', billRoutes);
+
+    // DB seeding
+    app.use('/api/v1/seed', require('../../seeder').seed);
 
 };
