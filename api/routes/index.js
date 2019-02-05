@@ -27,5 +27,7 @@ module.exports = (app) => {
 
     // DB seeding
     app.use('/api/v1/seed', require('../../seeder').seed);
+    app.use('/api/v1/faker', require('../../facker').fake);
+    app.use('/api/v1/faker/clear', require('../../facker').clear);
 
 };
