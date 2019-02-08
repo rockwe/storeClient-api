@@ -145,6 +145,7 @@ exports.create = (req, res, next) => {
             fixed: req.body.price.fixed
         },
         currency: req.body.currency,
+        original_language: req.body.original_language,
         //picture: req.body.picture,
         region: req.body.region,
         //displayPhoneNumber: req.body.displayPhoneNumber, // Moved to user model

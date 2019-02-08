@@ -10,6 +10,7 @@ const articleSchema = mongoose.Schema({
         fixed: { type: Boolean, default: false }
     },
     currency: { type: String, default: 'DT' },
+    original_language: { type: String, default: 'French' },
     pictures: [{type: String}],
     region: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Town" },
     //displayPhoneNumber: { type: Boolean, default: true },
