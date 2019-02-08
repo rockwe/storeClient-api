@@ -152,7 +152,6 @@ exports.create = (req, res, next) => {
         //displayEmail: req.body.displayEmail,  // Moved to user model
         user: req.userData.id,
         subCategory: req.body.subCategory,
-        exchange: req.body.exchange,
         published: true, //req.body.published, // TODO set to false if articles are to be validated before publishing
         available: true, //req.body.available,
         // pictures: pictures

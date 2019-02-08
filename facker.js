@@ -187,7 +187,6 @@ const fakeArticles = async (regions, subCats) => {
             subCategory: subCats[faker.random.number(subCats.length - 1)],
             published: /*faker.random.boolean() || */true,
             available: /*faker.random.boolean()*/ true,
-            exchange: faker.random.boolean(),
             updated_at: faker.date.between('2015-01-01', '2018-12-16'),
             slug: slugify(item.title, { customReplacements: [['&', '']] }),
             live: false

@@ -20,7 +20,6 @@ const articleSchema = mongoose.Schema({
     published: { type: Boolean, default: false },
     available: { type: Boolean, default: true }, // Sold or not
     live: { type: Boolean, default: true },
-    exchange: { type: Boolean, default: true },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 });
