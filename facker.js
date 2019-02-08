@@ -180,7 +180,7 @@ const fakeArticles = async (regions, subCats) => {
                 fixed: faker.random.boolean()
             },
             currency: 'CFA',
-            original_language: 'French',
+            original_language: 'fr',
             pictures: item.images /*[faker.random.image(), faker.random.image(), faker.random.image(), faker.random.image(), faker.random.image()]*/,
             region: regions[faker.random.number(regions.length - 1)], // TODO
             user: userIds[faker.random.number(userIds.length - 1)],
