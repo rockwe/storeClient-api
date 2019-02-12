@@ -3,7 +3,7 @@ const Country = require('./api/models/country');
 const Town = require('./api/models/town');
 const Category = require('./api/models/category');
 const SubCategory = require('./api/models/subCategory');
-const Article = require('./api/models/product');
+const Product = require('./api/models/product');
 const User = require('./api/models/user');
 const Device = require('./api/models/device');
 
@@ -32,7 +32,7 @@ const clearModels = async() => {
     await Town.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
     await SubCategory.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
     await Category.deleteMany({ name: /[a-zA-Z0-9]/ }, function (err) {});
-    await Article.deleteMany({ title: /[a-zA-Z0-9]/ }, function (err) {});
+    await Product.deleteMany({ title: /[a-zA-Z0-9]/ }, function (err) {});
     await Device.deleteMany({ uuid: /[a-zA-Z0-9]/ }, function (err) {});
     await User.deleteMany({ role: 'faker' }, function (err) {});
     return Promise.resolve();
@@ -76,7 +76,7 @@ exports.seed = async function (req, res, next) {
 
     let catData = [];
     for (let item in CATEGORIES) {
-        catData.push({ name: item, webIcon: CATEGORY_ICONS[item], slug: slugify(item, { customReplacements: [['&', '']] }) });
+        catData.push({ name: item, mobileIcon: CATEGORY_ICONS[item], slug: slugify(item, { customReplacements: [['&', '']] }) });
     }
     const cat = await Category.insertMany(catData);
 
