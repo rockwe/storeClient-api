@@ -6,7 +6,7 @@ const markeController = require('../controllers/marks');
 
 router.get('/',checkAuth, markeController.fetch);
 router.get('/:id',checkAuth, markeController.find);
-router.post('/create',checkAuth, markeController.create);
+router.post('/create'/*,checkAuth*/, markeController.create);
 router.delete('/:id',checkAuth, markeController.delete);
 router.patch('/:id', checkAuth, markeController.patch);
 

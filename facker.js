@@ -103,18 +103,18 @@ const fakeCategories = async () => {
     return Promise.resolve(res);
 };
 
-// const fakeSubCategories = async (cats) => {
-//     let catIds = [];
-//     let subCatData = [];
-//     cats.map(c => {
-//         const subCats = customFakes.CATEGORIES[c.name];
-//         subCats.map(sc => {
-//           subCatData.push({ name: sc, category: c._id });
-//         })
-//     });
-//     const sc = await SubCategory.insertMany(subCatData);
-//     return Promise.resolve(sc);
-// };
+const fakeSubCategories = async (cats) => {
+    let catIds = [];
+    let subCatData = [];
+    cats.map(c => {
+        const subCats = customFakes.CATEGORIES[c.name];
+        subCats.map(sc => {
+          subCatData.push({ name: sc, category: c._id });
+        })
+    });
+    const sc = await SubCategory.insertMany(subCatData);
+    return Promise.resolve(sc);
+};
 
 const fakeUsers = async () => {
     bcrypt.hash('6543210', parseInt(process.env.PASSWORD_SALT), (err, hash) => {
@@ -138,7 +138,7 @@ const fakeUsers = async () => {
     });
 };
 
-const fakeArticles = async (regions, subCats, marks) => {
+const fakeArticles = async (regions, subCats) => {
     const articlesData = [];
     for (let i = 0; i < 75; i++) {
         let rand = Math.floor(Math.random() * 2);
@@ -167,12 +167,12 @@ const fakeArticles = async (regions, subCats, marks) => {
             bar_code: faker.random.number(20000),
             number_serial: faker.random.number(20125),
             amount: faker.random.number(20),
-            mark: marks[faker.random.number(marks.length - 1)],
+            mark: "5c62cdfb00add605c4b6ae5b",
             slug: slugify(item.title, { customReplacements: [['&', '']] }),
             live: false
         });
     }
-    Article.insertMany(articlesData).then(res => {
+    Product.insertMany(articlesData).then(res => {
         console.log('ARTICLES INSERTED.');
     });
 };
@@ -181,8 +181,10 @@ const fakeRegions = async () => {
     const regions = ['Tunis', 'Sousse', 'Sfax'];
     const marque = [ 'Dell', 'HP', 'Samsumg'];
     const data = [];
-    let mark = await new Mark(marque).them(res =>{
-    })
+    let mark = await new Mark({
+        name: "DELL"
+    }).save().then(res =>{
+    });
     let c = await new Country({name: 'Tumisie', code: 'Tn'}).save().then(c => {
         regions.map(r => {
             data.push({ name: r, country: c._id });
