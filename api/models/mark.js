@@ -5,5 +5,4 @@ const markSchema = mongoose.Schema({
     live: { type: Boolean, default: true },
 });
 
-
 module.exports = mongoose.model('Mark', markSchema);
