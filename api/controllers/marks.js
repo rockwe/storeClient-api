@@ -1,7 +1,8 @@
-const Claim = require('../models/claim');
+const Mark = require('../models/mark');
+
 
 exports.fetch =(req, res, next) => {
-    Claim.find()
+    Mark.find()
         .exec()
         .then(docs => {
             res.status(200).json({docs})
@@ -14,15 +15,15 @@ exports.fetch =(req, res, next) => {
 };
 
 exports.find = (req, res, next) => {
-    Claim.findById(req.params.id)
+    Mark.findById(req.params.id)
         .exec()
-        .then(contact => {
-            if (!contact) {
+        .then(mark => {
+            if (!mark) {
                 return res.status(404).json({
-                    message: "contact  not found"
+                    message: "mark  not found"
                 });
             }
-            res.status(200).json({town});
+            res.status(200).json({ mark });
         })
         .catch(err => {
             res.status(500).json({
@@ -32,17 +33,18 @@ exports.find = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-
-    const claim = new Claim({
-        title: req.body.title,
-        description: req.body.description
+    const mark = new Mark({
+        name: req.body.name
     });
-    claim.save()
+    mark.save()
         .then(result => {
             console.log(result);
             res.status(201).json({
                 message: "Success",
-                data: result
+                data: {
+                    _id: result._id,
+                    name: result.name
+                }
             });
         })
         .catch(err => {
@@ -51,11 +53,9 @@ exports.create = (req, res, next) => {
                 error: err
             });
         });
-
 };
-
 exports.delete = (req, res, next) => {
-    Claim.remove({_id: req.params.id})
+    Mark.remove({ _id: req.params.id })
         .exec()
         .then(result => {
             res.status(200).json({
@@ -71,13 +71,11 @@ exports.delete = (req, res, next) => {
 
 exports.patch = (req, res, next) => {
 
-    Claim.findByIdAndUpdate(req.params.id, {
-        title: req.body.title,
-        description: req.body.description,
-        updated_at: req.body.updated_at
+    Mark.findByIdAndUpdate(req.params.id, {
+        name: req.body.name,
     }, {new: true}, function (err) {
         if (err) {
-            res.send({state: "erreur update claim"})
+            res.send({state: "erreur update mark"})
         }
         res.send({state: "Success"})
     })
