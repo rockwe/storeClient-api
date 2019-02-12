@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 
 const contactSchema = mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, required: true, ref:'User'},
+    email: { type: String, required: false },
+    title: { type: String, required: false, default: "Renseignements"},
     message: { type: String, required: true},
     created_at: { type: Date, default: Date.now }
 
