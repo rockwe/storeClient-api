@@ -4,28 +4,26 @@ const User = require('../api/models/user');
 const Device = require('../api/models/device');
 const Category = require('../api/models/category');
 const SubCategory = require('../api/models/subCategory');
+const Mark = require('../api/models/mark');
 
 let TITLE = '';
 let MESSAGE = '';
 
 const NOTIFICATION_EVENTS = {
-    NEW_ARTICLE: 'article',
+    NEW_PRODUCT: 'product',
     NEW_VISIT: 'visit',
-    NEW_MESSAGE: 'message',
+    NEW_STOCK: 'stock',
 };
 
 exports.EVENTS = NOTIFICATION_EVENTS;
 
-// data = article object for NEW_ARTICLE
-// data = {from: {_id}, to: {_id}} object for NEW_MESSAGE
-// data = { user, article } object for NEW_VISIT
 exports.trigger = async (event, data) => {
     // TODO validate data with the above rules to prevent errors
     MESSAGE = '';
     let users = [];
     switch (event) {
-        case NOTIFICATION_EVENTS.NEW_ARTICLE:
-            TITLE = 'Nouvelle annonce';
+        case NOTIFICATION_EVENTS.NEW_PRODUCT:
+            TITLE = 'New product';
             let cat_id = null, cat_name = null;
             if (!data.subCategory.category) {
                 const subcat = await SubCategory.findOne({_id: data.subCategory }).populate('category', '_id name').exec();
@@ -36,22 +34,23 @@ exports.trigger = async (event, data) => {
             }
             const owner = await User.findOne({ _id: data.user }).exec();
             if (cat_name)
-                MESSAGE = `${owner.name} a publié une nouvelle annonce dans la catégorie ${cat_name}`;
+                MESSAGE = `${owner.name} a publié un nouveau produit dans la catégorie ${cat_name}`;
 
             users = await User.find({pushCategories: cat_id, _id: { $ne: data.user }}).exec();
             break;
-        case NOTIFICATION_EVENTS.NEW_MESSAGE:
-            TITLE = 'Nouveau message';
-            const from = await User.findOne({ _id: data.from._id }).exec();
-            users = await User.find({ _id: data.to._id, notifyOnNewMessage: true }).exec();
-            MESSAGE = `Vous avez un nouveau message de ${from.name}`;
-            // users = await User.find({_id: to._id, notifyOnNewMessage: true, }).exec();
+        case NOTIFICATION_EVENTS.NEW_STOCK:
+            TITLE = 'Nouveau stock';
+            const mark_name = await Mark.findOne({ _id: data.name}).exec();
+            if(mark_name){
+                MESSAGE = `${owner.mane} a ajouter un nouveau stock de la marque ${mark_name}`
+            }
             break;
+
         case NOTIFICATION_EVENTS.NEW_VISIT:
             const visitor = await User.findOne({ _id: data.user.id}).exec();
             TITLE = 'Nouvelle visite';
-            MESSAGE = `${visitor.name} a visiter votre article ${data.article.title}`;
-            users = await User.find({ $and: [ {_id: data.article.user._id}, {_id: { $ne: visitor._id}} ], notifyOnArticleVisite: true}).exec();
+            MESSAGE = `${visitor.name} a visiter votre Produit  ${data.product.title}`;
+            users = await User.find({ $and: [ {_id: data.product.user._id}, {_id: { $ne: visitor._id}} ], notifyOnProductVisite: true}).exec();
             break;
     }
     //console.log(users);

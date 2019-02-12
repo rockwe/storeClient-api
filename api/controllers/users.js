@@ -1,13 +1,12 @@
 //const uuidv4 = require('uuid/v4');
 const User = require('../models/user');
 const Device = require('../models/device');
-//const Conversation = require('../models/conversation');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Pusher = require('../../helpers/pusher');
 
 const manageDevice = async (uid, params) => {
-    const uuid = params.uuid || 'store-' + params.email /*+ '-' + uuidv4()*/;
+    const uuid = params.uuid || 'store-' + params.email ;
     const pusherChannel = params.pusherChannel || uuid;
     const version = params.version || 'n/a';
     const type = params.uuid ? 'mobile' : 'web';
@@ -86,9 +85,7 @@ exports.signup = async (req, res, next) => {
                             email: req.body.email,
                             password: hash,
                             name: req.body.name,
-                            phoneNumber: req.body.phoneNumber || null,
-                            acceptSMS: req.body.phoneNumber && req.body.phoneNumber.length > 0,
-                            acceptPhone: req.body.phoneNumber && req.body.phoneNumber.length > 0,
+                            phoneNumber: req.body.phoneNumber || null
                         }).save().then(u => {
                             const token = jwt.sign({
                                 email: u.email,

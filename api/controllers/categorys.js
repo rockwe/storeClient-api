@@ -1,6 +1,6 @@
 const Category = require('../models/category');
 const SubCategory = require('../models/subCategory');
-const Article = require('../models/article');
+const Article = require('../models/product');
 
 
 exports.fetch = async (req, res, next) => {

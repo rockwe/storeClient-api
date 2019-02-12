@@ -2,7 +2,7 @@ const express = require('express');
 const checkAuth = require('../middleware/chack-auth');
 const router = express.Router();
 
-const LignePanierController = require('../controllers/lignePaniers');
+const LignePanierController = require('../controllers/lineBaskets');
 
 router.get('/',checkAuth, LignePanierController.fetch);
 router.get('/:id',checkAuth, LignePanierController.find);
