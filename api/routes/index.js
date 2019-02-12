@@ -4,10 +4,14 @@ const  subCategoryRoutes = require('./subCategory');
 const  categoryRoutes = require('./category');
 const  countryRoutes = require('./country');
 const  townRoutes = require('./town');
-const  articleRoutes = require('./article');
-const  lignepanierRoutes = require('./lignePagne');
+const  productRoutes = require('./product');
+const  lineBasketRoutes = require('./lineBasket');
 const  billRoutes = require('./bill');
 const  configurationRoutes = require('./configuration');
+const orderRoutes = require('./order');
+const contactRoutes = require('./contact');
+const claimRoutes = require('./claim');
+const markRoutes = require('./mark');
 
 
 
@@ -20,10 +24,14 @@ module.exports = (app) => {
     app.use('/api/v1/category', categoryRoutes);
     app.use('/api/v1/country', countryRoutes);
     app.use('/api/v1/town', townRoutes);
-    app.use('/api/v1/article', articleRoutes);
-    app.use('/api/v1/shopeDetail', lignepanierRoutes);
+    app.use('/api/v1/product', productRoutes);
+    app.use('/api/v1/basket', lineBasketRoutes);
     app.use('/api/v1/bill', billRoutes);
     app.use('/api/v1/config', configurationRoutes);
+    app.use('/api/v1/order', orderRoutes);
+    app.use('/api/v1/contact', contactRoutes);
+    app.use('/api/v1/claim', claimRoutes);
+    app.use('/api/v1/mark', markRoutes);
 
     // DB seeding
     app.use('/api/v1/seed', require('../../seeder').seed);

@@ -12,14 +12,14 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage })
-const articleController = require('../controllers/products');
+const productController = require('../controllers/products');
 
-router.get('/'/*,checkAuth*/, articleController.fetch);
-router.get('/:id',/*checkAuth,*/ articleController.find);
-router.get('/:id/similar',/*checkAuth,*/ articleController.findSimilar);
-router.post('/:id/upload', /*checkAuth,*/ upload.single('fileToUpload'), articleController.upload);
-router.post('/create',checkAuth, articleController.create);
-router.delete('/:id',checkAuth, articleController.delete);
-router.patch('/:id/edit', checkAuth, articleController.patch);
+router.get('/'/*,checkAuth*/, productController.fetch);
+router.get('/:id',/*checkAuth,*/ productController.find);
+router.get('/:id/similar',/*checkAuth,*/ productController.findSimilar);
+router.post('/:id/upload', /*checkAuth,*/ upload.single('fileToUpload'), productController.upload);
+router.post('/create',checkAuth, productController.create);
+router.delete('/:id',checkAuth, productController.delete);
+router.patch('/:id/edit', checkAuth, productController.patch);
 
 module.exports = router;
