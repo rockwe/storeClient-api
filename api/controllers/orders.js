@@ -46,6 +46,23 @@ exports.find = (req, res, next) => {
             });
         });
 };
+exports.findUser = (req, res, next) => {
+    Order.findById(req.params.user)
+        .exec()
+        .then(order => {
+            if (!order) {
+                return res.status(404).json({
+                    message: "commander  not found"
+                });
+            }
+            res.status(200).json({ data: order });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+};
 
 exports.create = (req, res, next) => {
     const order = new Order({
