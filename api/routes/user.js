@@ -20,7 +20,7 @@ router.get('/me', checkAuth, userController.me);
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 router.patch('/push-token/set', checkAuth, userController.setDevicePushToken);
-router.get('/:cid/:status/typing', checkAuth, userController.emitTypingMessage);
+/*router.get('/:cid/:status/typing', checkAuth, userController.emitTypingMessage);*/
 router.post('/logout', checkAuth, userController.logout);
 router.patch('/:id/upload', checkAuth, upload.single('picture'), userController.upload);
 

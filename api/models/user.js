@@ -13,6 +13,8 @@ const userSchema = mongoose.Schema({
     notifyOnProductVisite: { type: Boolean, default: true },
     live: { type: Boolean, default: true },
     device: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Device' },
+    reset_token: { type: String, default: null },
+    resetPasswordExpires: { type: Date },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
 });

@@ -50,7 +50,9 @@ exports.find = (req, res, next) => {
 exports.create = (req, res, next) => {
     const order = new Order({
         user: req.body.user,
-        line_basket: req.body.line_basket
+        //line_basket: req.body.line_basket,
+        reference: req.body.user,
+
     });
     order.save()
         .then(result => {

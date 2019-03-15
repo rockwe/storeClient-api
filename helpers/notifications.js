@@ -40,7 +40,7 @@ exports.trigger = async (event, data) => {
             break;
         case NOTIFICATION_EVENTS.NEW_STOCK:
             TITLE = 'Nouveau stock';
-            const mark_name = await Mark.findOne({ _id: data.name}).exec();
+            const mark_name = await Mark.findOne({ name: data.name}).exec();
             if(mark_name){
                 MESSAGE = `${owner.mane} a ajouter un nouveau stock de la marque ${mark_name}`
             }

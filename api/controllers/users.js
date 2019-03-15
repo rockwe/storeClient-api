@@ -169,15 +169,92 @@ exports.logout = async (req, res, next) => {
     })
 };
 
-exports.emitTypingMessage = async (req, res, next) => {
-    const status = req.params.status;
-    const me = req.userData;
-    const devices = await Device.find({user: req.query.uid});
-    devices.map(d => {
-        Pusher.trigger(d.pusherChannel, 'typing', {status: status === 'true', user: me.id});
+exports.forgot_password =  (req, res, next) => {
+    const date = Date.now() + 3600000; // 1 hour
+   let  token = Math.random().toString(36);
+
+        User.findOne({email: req.body.email}).exec()
+            .then(user => {
+                if (!user) {
+                    return res.status(404).json({error: 'Erreur de connexion. Vérifier vos données'})
+                }
+               user.reset_token = token;
+               user.resetPasswordExpires = date;
+               user.save();
+            })
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD_EMAIL
+        }
     });
-    res.status(200).json();
+
+    var mailOptions = {
+        from: req.body.email,
+        to: process.env.EMAIL,
+        template: 'forgot-password-email',
+        subject: 'Password help has arrived!',
+        context: {
+            url: 'http://localhost:5000/api/v1/auth/reset_password?token=' + token,
+            name: user.name.split(' ')[0]
+        }
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
 };
+exports.reset_password = (req, res, next) => {
+    User.findOne({
+        reset_token: req.body.token,
+        resetPasswordExpires: {
+            $gt:Date.now()
+        }
+    }).exec().then(user => {
+        if(user){
+            if(req.body.newPassword === req.body.verifyPassword){
+                user.password = bcrypt.hashSync(req.body.newPassword, 10);
+                user.reset_token = undefined;
+                user.resetPasswordExpires = undefined;
+                user.save(function(err){
+                    if (err) {
+                        return res.status(422).send({ message: err});
+                    }else {
+                        var data = {
+                            to: user.email,
+                            from: process.env.EMAIL,
+                            template:  'reset-password-email',
+                            subject: 'Password Reset Confirmation',
+                            context: {
+                                name: user.name.splice(' ')
+                            }
+                        };
+                        smtpTransport.sendMail(data, function (err) {
+                            if(!err){
+                                return res.json({ message: 'Password reset' });
+                            }else{
+                                return done(err)
+                            }
+                        });
+                    }
+                });
+            }else {
+                return res.status(422).send({
+                    message: 'passwords do not match'
+                });
+            }
+        }else {
+            return res.status(400).send({
+                message: 'Password reset token is invalid or has expired'
+            });
+        }
+    });
+};
+
 
 exports.upload = async (req, res, next) => {
     // TODO update path to absolute URL
