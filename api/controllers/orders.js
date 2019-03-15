@@ -11,7 +11,7 @@ exports.fetch =(req, res, next) => {
                     return {
                         user: doc.user,
                         code: doc.code,
-                        line_basket: doc.line_basket,
+                       // line_basket: doc.line_basket,
                         created_at: doc.created_at,
                         updated_at: doc.updated_at,
                         request: {
