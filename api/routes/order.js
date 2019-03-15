@@ -5,7 +5,7 @@ const router = express.Router();
 const orderController = require('../controllers/orders');
 
 router.get('/',checkAuth, orderController.fetch);
-router.get('/:id',checkAuth, orderController.find);
+router.get('/:id',/*checkAuth,*/ orderController.find);
 router.post('/create',checkAuth, orderController.create);
 router.delete('/:id',checkAuth, orderController.delete);
 router.patch('/:id', checkAuth, orderController.patch);
