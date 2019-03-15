@@ -47,7 +47,7 @@ exports.find = (req, res, next) => {
         });
 };
 exports.findUser = (req, res, next) => {
-    Order.findById(req.params.user)
+    Order.find({user: req.params.user})
         .exec()
         .then(order => {
             if (!order) {
