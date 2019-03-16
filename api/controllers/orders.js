@@ -80,7 +80,7 @@ exports.create = (req, res, next) => {
             products.map(i => {
                 new LineOrder({
                     order: result._id,
-                    product: i.product,
+                    product: i._id,
                     quantity: i.amount,
                     prixUntaire: i.price,
                 }).save();
