@@ -1,4 +1,5 @@
 const Order = require('../models/order');
+const LineOrder = require('../models/LineOrder');
 
 
 exports.fetch =(req, res, next) => {
@@ -65,14 +66,26 @@ exports.findUser = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
+    let products = req.body.product;
+    let ref = req.body.user+'-'+Math.random(9)+'-'+Date.now();
     const order = new Order({
         user: req.body.user,
+        prixT: req.body.prixT,
+        reference: ref,
         //line_basket: req.body.line_basket,
-        reference: req.body.user,
-
+      //  reference: req.body.user,
     });
     order.save()
         .then(result => {
+            products.map(i => {
+                new LineOrder({
+                    order: result._id,
+                    product: i.product,
+                    quantity: i.amount,
+                    prixUntaire: i.price,
+                }).save();
+            });
+
             console.log(result);
             res.status(201).json({
                 message: "Success",

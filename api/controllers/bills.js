@@ -1,4 +1,4 @@
-const Bill = require('../models/bill');
+const Bill = require('../models/LineOrder');
 
 
 exports.fetch =(req, res, next) => {

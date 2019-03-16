@@ -8,14 +8,9 @@ const Product = require('../models/product');
 exports.fetch =(req, res, next) => {
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
-    let dateSort = req.query.dateSort || req.query.dateSort == 'true' ? 1 : -1;
-    let priceSort = parseInt(req.query.priceSort) || null;
     let priceMax = parseFloat(req.query.priceMax) || null;
     let priceMin = parseFloat(req.query.priceMin) || null;
-    let regionFilter = req.query.region || '';
-    let subCatFilter = req.query.subCategory || '';
     let query = req.query.search || '';
-    let owner = req.query.user || null;
 
     if (!priceMin)
         priceMin = 0;
@@ -27,15 +22,8 @@ exports.fetch =(req, res, next) => {
 
     search['price'] = { $gte: priceMin, $lte: priceMax };
 
-    if (regionFilter.trim().length) {
-        let regions = regionFilter.split(',').filter(r => r.length > 0);
-        // TODO why not $in ?
-        search['region'] = { $in: regions };
-    }
-    if (subCatFilter.trim().length) {
-        // TODO why not $in ?
-        search['subCategory'] = { $in: subCatFilter.split(',') };
-    }
+
+
     if (query.length) {
         query = '.*' + query + '.*';
         search['$or'] = [
@@ -44,22 +32,14 @@ exports.fetch =(req, res, next) => {
         ];
     }
 
-    if (priceSort) {
-        sort['price'] = priceSort;
-        delete sort['updated_at'];
-    } else if (dateSort)
-        sort['updated_at'] = dateSort;
 
-    if (owner) {
-        search['user'] = owner;
-    }
+
     Product.paginate(search,
         {
             page: page, limit: limit,
             sort: sort,
             populate: [
                 { path: 'user', select: 'name' },
-                { path: 'region', populate: { path: 'country', model: 'Country', select: 'name' }  },
             ]
         },
     )
