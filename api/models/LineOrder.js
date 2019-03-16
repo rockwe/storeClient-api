@@ -9,4 +9,4 @@ const lineOrderSchema = mongoose.Schema({
     updated_at: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Bill', lineOrderSchema);
+module.exports = mongoose.model('LineOrder', lineOrderSchema);
