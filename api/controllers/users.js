@@ -4,6 +4,7 @@ const Device = require('../models/device');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Pusher = require('../../helpers/pusher');
+var nodemailer = require('nodemailer');
 
 const manageDevice = async (uid, params) => {
     const uuid = params.uuid || 'store-' + params.email ;
@@ -170,17 +171,17 @@ exports.logout = async (req, res, next) => {
 };
 
 exports.forgot_password =  (req, res, next) => {
-    const date = Date.now() + 3600000; // 1 hour
-   let  token = Math.random().toString(36);
+  //  const date = Date.now() + 3600000; // 1 hour
+  // let  token = Math.random().toString(36);
 
         User.findOne({email: req.body.email}).exec()
             .then(user => {
                 if (!user) {
                     return res.status(404).json({error: 'Erreur de connexion. Vérifier vos données'})
                 }
-               user.reset_token = token;
-               user.resetPasswordExpires = date;
-               user.save();
+               return res.status(200).json({
+                   user
+               })
             })
     var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -195,10 +196,6 @@ exports.forgot_password =  (req, res, next) => {
         to: process.env.EMAIL,
         template: 'forgot-password-email',
         subject: 'Password help has arrived!',
-        context: {
-            url: 'http://localhost:5000/api/v1/auth/reset_password?token=' + token,
-            name: user.name.split(' ')[0]
-        }
     };
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
@@ -208,15 +205,24 @@ exports.forgot_password =  (req, res, next) => {
         }
     });
 };
+
 exports.reset_password = (req, res, next) => {
-    User.findOne({
-        reset_token: req.body.token,
-        resetPasswordExpires: {
-            $gt:Date.now()
+
+    User.findByIdAndUpdate(req.body.id, {
+        password: bcrypt.hashSync(req.body.newPassword, 10)
+    }, {new: true}, function (err) {
+        if (err) {
+            res.send({state: "erreur update password"})
         }
-    }).exec().then(user => {
+        res.send({state: "Success"})
+})
+}
+
+  /*  User.findById(
+        req.body.id
+    ).exec().then(user => {
         if(user){
-            if(req.body.newPassword === req.body.verifyPassword){
+                if(req.body.newPassword === req.body.verifyPassword){
                 user.password = bcrypt.hashSync(req.body.newPassword, 10);
                 user.reset_token = undefined;
                 user.resetPasswordExpires = undefined;
@@ -254,7 +260,7 @@ exports.reset_password = (req, res, next) => {
         }
     });
 };
-
+*/
 
 exports.upload = async (req, res, next) => {
     // TODO update path to absolute URL
