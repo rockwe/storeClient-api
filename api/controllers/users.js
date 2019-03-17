@@ -208,7 +208,7 @@ exports.forgot_password =  (req, res, next) => {
 
 exports.reset_password = (req, res, next) => {
 
-    User.findByIdAndUpdate(req.body.id, {
+ /*   User.findByIdAndUpdate(req.body.id, {
         password: bcrypt.hashSync(req.body.newPassword, 10)
     }, {new: true}, function (err) {
         if (err) {
@@ -217,8 +217,8 @@ exports.reset_password = (req, res, next) => {
         res.send({state: "Success"})
 })
 }
-
-  /*  User.findById(
+*/
+    User.findById(
         req.body.id
     ).exec().then(user => {
         if(user){
@@ -230,20 +230,25 @@ exports.reset_password = (req, res, next) => {
                     if (err) {
                         return res.status(422).send({ message: err});
                     }else {
-                        var data = {
-                            to: user.email,
-                            from: process.env.EMAIL,
-                            template:  'reset-password-email',
-                            subject: 'Password Reset Confirmation',
-                            context: {
-                                name: user.name.splice(' ')
+                        var transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: process.env.EMAIL,
+                                pass: process.env.PASSWORD_EMAIL
                             }
+                        });
+
+                        var mailOptions = {
+                            from: req.body.email,
+                            to: process.env.EMAIL,
+                            template: 'reset-password',
+                            subject: 'Password success!',
                         };
-                        smtpTransport.sendMail(data, function (err) {
-                            if(!err){
-                                return res.json({ message: 'Password reset' });
-                            }else{
-                                return done(err)
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log('Email sent: ' + info.response);
                             }
                         });
                     }
@@ -253,14 +258,9 @@ exports.reset_password = (req, res, next) => {
                     message: 'passwords do not match'
                 });
             }
-        }else {
-            return res.status(400).send({
-                message: 'Password reset token is invalid or has expired'
-            });
         }
     });
 };
-*/
 
 exports.upload = async (req, res, next) => {
     // TODO update path to absolute URL
