@@ -182,7 +182,7 @@ exports.forgot_password =  (req, res, next) => {
                return res.status(200).json({
                    user
                });
-                var transporter = nodemailer.createTransport({
+              /*  var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
                         user: process.env.EMAIL,
@@ -202,7 +202,7 @@ exports.forgot_password =  (req, res, next) => {
                     } else {
                         console.log('Email sent: ' + info.response);
                     }
-                });
+                });*/
             });
 };
 
