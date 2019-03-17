@@ -173,6 +173,7 @@ exports.logout = async (req, res, next) => {
 exports.forgot_password =  (req, res, next) => {
   //  const date = Date.now() + 3600000; // 1 hour
   // let  token = Math.random().toString(36);
+    console.log('email-->',req.body.email);
 
         User.findOne({email: req.body.email}).exec()
             .then(user => {
