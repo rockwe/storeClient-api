@@ -181,29 +181,29 @@ exports.forgot_password =  (req, res, next) => {
                 }
                return res.status(200).json({
                    user
-               })
-            })
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASSWORD_EMAIL
-        }
-    });
+               });
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: process.env.EMAIL,
+                        pass: process.env.PASSWORD_EMAIL
+                    }
+                });
 
-    var mailOptions = {
-        from: req.body.email,
-        to: process.env.EMAIL,
-        template: 'forgot-password-email',
-        subject: 'Password help has arrived!',
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
+                var mailOptions = {
+                    from: req.body.email,
+                    to: process.env.EMAIL,
+                    template: 'forgot-password-email',
+                    subject: 'Password help has arrived!',
+                };
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            });
 };
 
 exports.reset_password = (req, res, next) => {
