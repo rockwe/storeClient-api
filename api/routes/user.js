@@ -22,7 +22,7 @@ router.post('/login', userController.login);
 router.patch('/push-token/set', checkAuth, userController.setDevicePushToken);
 router.post('/logout', checkAuth, userController.logout);
 router.patch('/:id/upload', checkAuth, upload.single('picture'), userController.upload);
-router.get('/verifie-mail', userController.forgot_password);
+router.post('/verifie-mail', userController.forgot_password);
 router.post('/reset_password', userController.reset_password);
 
 
