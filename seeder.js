@@ -3,7 +3,7 @@ const Country = require('./api/models/country');
 const Town = require('./api/models/town');
 const Category = require('./api/models/category');
 const SubCategory = require('./api/models/subCategory');
-const Product = require('./api/models/product');
+const Product = require('./api/models/article');
 const User = require('./api/models/user');
 const Device = require('./api/models/device');
 

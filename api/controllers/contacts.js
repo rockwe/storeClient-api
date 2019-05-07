@@ -24,6 +24,9 @@ exports.create = (req, res, next) => {
 
     var transporter = nodemailer.createTransport({
         service: 'gmail',
+        host: 'smtp.hostinger.com',
+        secure: !true,
+        port: 587,
         auth: {
             user: process.env.EMAIL,
             pass: process.env.PASSWORD_EMAIL
@@ -34,7 +37,11 @@ exports.create = (req, res, next) => {
         from: req.body.email,
         to: process.env.EMAIL,
         subject: req.body.title,
-        text: req.body.message
+        text: req.body.description,
+        attachments: [{
+            filename: req.body.file,
+            path: req.body.file
+        }]
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -46,7 +53,8 @@ exports.create = (req, res, next) => {
     });
     const contact = new Contact({
         email: req.body.email,
-        message: req.body.message
+        title: req.body.title,
+        description: req.body.description
     });
     contact.save()
         .then(result => {

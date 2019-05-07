@@ -7,7 +7,7 @@ const Pusher = require('../../helpers/pusher');
 var nodemailer = require('nodemailer');
 
 const manageDevice = async (uid, params) => {
-    const uuid = params.uuid || 'store-' + params.email ;
+    const uuid = params.uuid || 'selam-' + params.email /*+ '-' + uuidv4()*/;
     const pusherChannel = params.pusherChannel || uuid;
     const version = params.version || 'n/a';
     const type = params.uuid ? 'mobile' : 'web';
@@ -84,9 +84,13 @@ exports.signup = async (req, res, next) => {
                     } else {
                         const user = new User({
                             email: req.body.email,
+                            //pusherChannel: req.body.pusherChannel || 'channel-' + (new Date).getTime(),
+                            //deviceUUID: req.body.uuid || 'UUID-'  + (new Date).getTime(),
                             password: hash,
                             name: req.body.name,
-                            phoneNumber: req.body.phoneNumber || null
+                            phoneNumber: req.body.phoneNumber || null,
+                            acceptSMS: req.body.phoneNumber && req.body.phoneNumber.length > 0,
+                            acceptPhone: req.body.phoneNumber && req.body.phoneNumber.length > 0,
                         }).save().then(u => {
                             const token = jwt.sign({
                                 email: u.email,
@@ -169,6 +173,18 @@ exports.logout = async (req, res, next) => {
         })
     })
 };
+
+
+exports.emitTypingMessage = async (req, res, next) => {
+    const status = req.params.status;
+    const me = req.userData;
+    const devices = await Device.find({user: req.query.uid});
+    devices.map(d => {
+        Pusher.trigger(d.pusherChannel, 'typing', {status: status === 'true', user: me.id});
+    });
+    res.status(200).json();
+};
+
 
 exports.forgot_password =  (req, res, next) => {
   //  const date = Date.now() + 3600000; // 1 hour
