@@ -1,13 +1,14 @@
 const faker = require('faker');
 const slugify = require('@sindresorhus/slugify');
 const bcrypt = require('bcrypt');
-const Product = require('./api/models/article');
+const Article = require('./api/models/article');
 const User = require('./api/models/user');
 const Country = require('./api/models/country');
 const Town = require('./api/models/town');
 const Category = require('./api/models/category');
 const SubCategory = require('./api/models/subCategory');
-const Mark = require('./api/models/mark');
+const Conversation = require('./api/models/conversation');
+const Message = require('./api/models/message');
 
 const CATEGORY_ICONS = {
     'Autre': 'more_horiz',
@@ -75,17 +76,37 @@ const TEXTS = {
             category: 'phones',
             images: getRandomImage(PHONE_IMAGES, faker.random.number({min: 2, max: 10}))
         },
+    ],
+    LAPTOPS: [
+        {
+            title: 'PC',
+            description: 'Je met en vente mon PC encore en très bonne état',
+            category: 'laptops',
+            images: getRandomImage(LAPTOP_IMAGES, faker.random.number({min: 2, max: 10}))
+        }, {
+            title: 'Laptop a vendre',
+            description: 'Je vends mon laptop a un tres bon prix.',
+            category: 'laptops',
+            images: getRandomImage(LAPTOP_IMAGES, faker.random.number({min: 2, max: 10}))
+        }, {
+            title: 'Laptop occasion',
+            description: 'Je vends mon laptop a un tres bon prix. Je vous attends.',
+            category: 'laptops',
+            images: getRandomImage(LAPTOP_IMAGES, faker.random.number({min: 2, max: 10}))
+        },
     ]
 };
 
 const userIds = [];
 
 const clearModels = async() => {
-   //await Country.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
-   /// await Town.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
-  //  await SubCategory.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
-   // await Category.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
-    await Product.deleteMany({ title: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Country.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Town.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await SubCategory.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Category.deleteMany({ live: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Article.deleteMany({ title: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Message.deleteMany({ content: false }, function (err) {}); // /[a-zA-Z0-9]/
+    await Conversation.deleteMany({ _id: { $ne: null } }, function (err) {});
     await User.deleteMany({ role: 'faker' }, function (err) {});
     return Promise.resolve();
 };
@@ -109,7 +130,7 @@ const fakeSubCategories = async (cats) => {
     cats.map(c => {
         const subCats = customFakes.CATEGORIES[c.name];
         subCats.map(sc => {
-          subCatData.push({ name: sc, category: c._id });
+            subCatData.push({ name: sc, category: c._id });
         })
     });
     const sc = await SubCategory.insertMany(subCatData);
@@ -128,7 +149,11 @@ const fakeUsers = async () => {
                     picture: faker.random.image(),
                     isProfessional: faker.random.boolean(),
                     role: 'faker',
+                    acceptChat: faker.random.boolean(),
                     active: faker.random.boolean(),
+                    acceptChats: faker.random.boolean(),
+                    acceptPhone: faker.random.boolean(),
+                    acceptSMS: faker.random.boolean(),
                     live: false
                 }).save().then(u => { userIds.push(u._id) });
             }
@@ -147,45 +172,39 @@ const fakeArticles = async (regions, subCats) => {
         if (rand) {
             item = TEXTS.PHONES[Math.floor(Math.random() * TEXTS.PHONES.length - 1)]
         } else {
-          //  item = TEXTS.LAPTOPS[Math.floor(Math.random() * TEXTS.LAPTOPS.length - 1)]
+            item = TEXTS.LAPTOPS[Math.floor(Math.random() * TEXTS.LAPTOPS.length - 1)]
         }
         if (!item) { continue; }
 
         articlesData.push({
             title: item.title /*faker.lorem.sentence()*/,
             description: item.description /*faker.lorem.paragraph()*/,
-            price: faker.random.number(150000),
+            price: {
+                amount: faker.random.number(150000),
+                fixed: faker.random.boolean()
+            },
             currency: 'CFA',
-            original_language: 'fr',
             pictures: item.images /*[faker.random.image(), faker.random.image(), faker.random.image(), faker.random.image(), faker.random.image()]*/,
             region: regions[faker.random.number(regions.length - 1)], // TODO
             user: userIds[faker.random.number(userIds.length - 1)],
             subCategory: subCats[faker.random.number(subCats.length - 1)],
             published: /*faker.random.boolean() || */true,
             available: /*faker.random.boolean()*/ true,
+            exchange: faker.random.boolean(),
             updated_at: faker.date.between('2015-01-01', '2018-12-16'),
-            bar_code: faker.random.number(20000),
-            number_serial: faker.random.number(20125),
-            amount: faker.random.number(20),
-            mark: "5c62cdfb00add605c4b6ae5b",
             slug: slugify(item.title, { customReplacements: [['&', '']] }),
             live: false
         });
     }
-    Product.insertMany(articlesData).then(res => {
+    Article.insertMany(articlesData).then(res => {
         console.log('ARTICLES INSERTED.');
     });
 };
 
 const fakeRegions = async () => {
-    const regions = ['Tunis', 'Sousse', 'Sfax'];
-    const marque = [ 'Dell', 'HP', 'Samsumg'];
+    const regions = ['Yaounde', 'Bafoussam', 'Dschang'];
     const data = [];
-    let mark = await new Mark({
-        name: "DELL"
-    }).save().then(res =>{
-    });
-    let c = await new Country({name: 'Tumisie', code: 'Tn'}).save().then(c => {
+    let c = await new Country({name: 'Cameroon', code: 'cm'}).save().then(c => {
         regions.map(r => {
             data.push({ name: r, country: c._id });
         });
@@ -198,7 +217,7 @@ const fakeRegions = async () => {
                 fakeSubCategories(cats).then(sc => {
                     const scIds = [];
                     sc.map(s => scIds.push(s._id));
-                    fakeArticles(ids, scIds, mark);
+                    fakeArticles(ids, scIds);
                 });
             });
         });
