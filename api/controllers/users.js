@@ -51,7 +51,7 @@ exports.login = (req, res, next) => {
                     }, process.env.JWT_KEY, {expiresIn: process.env.JWT_EXPIRE_DURATION});
 
                     manageDevice(user._id, req.body).then(d => {
-                        console.log('DEVICE MANAGED');
+                        console.log('DEVICE MANAGED',d);
                     }).catch(err => {
                         console.log('CANNOT MANAGE DEVICE ', err)
                     });
