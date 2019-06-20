@@ -202,7 +202,7 @@ const fakeArticles = async (regions, subCats) => {
 };
 
 const fakeRegions = async () => {
-    const regions = ['Yaounde', 'Bafoussam', 'Dschang'];
+    const regions = ['Yaounde', 'Bafoussam', 'Dschang','Bafang','Bamenda','Bandjoun','Garoua','Yagoua'];
     const data = [];
     let c = await new Country({name: 'Cameroon', code: 'cm'}).save().then(c => {
         regions.map(r => {
