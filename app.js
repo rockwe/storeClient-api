@@ -14,7 +14,8 @@ if (process.env.ENV === 'dev') {
     mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useNewUrlParser: true });
 } else {
     //mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?authSource=admin`, { useNewUrlParser: true, user: process.env.DB_USER, pass: process.env.DB_PASS });
-    mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useNewUrlParser: true, user: process.env.DB_USER, pass: process.env.DB_PASS });
+   // mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useNewUrlParser: true, user: process.env.DB_USER, pass: process.env.DB_PASS });
+    mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@storeclientapi.k61o6.mongodb.net/${process.env.DB_PORT}?retryWrites=true&w=majority`, { useNewUrlParser: true, user: process.env.DB_USER, pass: process.env.DB_PASS });
 }
 const db = mongoose.connection;
 
